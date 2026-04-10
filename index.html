@@ -534,6 +534,11 @@
           closeBtn.addEventListener("click", function () {
             setBannerOpen(false);
           });
+          document.addEventListener("click", function (e) {
+            if (!banner.classList.contains("is-open")) return;
+            if (banner.contains(e.target) || e.target === creditBtn) return;
+            setBannerOpen(false);
+          });
           document.addEventListener("keydown", function (e) {
             if (e.key === "Escape" && banner.classList.contains("is-open")) {
               setBannerOpen(false);
