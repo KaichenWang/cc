@@ -1,0 +1,22 @@
+{
+  "name": "Goal Caufield",
+  "short_name": "Goal Caufield",
+  "description": "Goal Caufield - Celebrate historic Montreal Canadiens Cole Caufield 50 goals of the 2025-2026 season.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#111111",
+  "background_color": "#111111",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
