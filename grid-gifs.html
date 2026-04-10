@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>50 GIF grid</title>
+  <title>Goal Caufield</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -67,6 +67,8 @@
       min-width: 0;
       overflow: hidden;
       background: #222;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .cell::after {
@@ -76,6 +78,17 @@
       background: rgba(0, 0, 0, 0.5);
       pointer-events: none;
       z-index: 1;
+      transition: opacity 0.15s ease;
+    }
+
+    .cell:hover::after,
+    .cell:active::after {
+      opacity: 0;
+    }
+
+    .cell:hover .cell-number,
+    .cell:active .cell-number {
+      opacity: 0;
     }
 
     .cell-number {
@@ -92,6 +105,7 @@
       color: rgba(255, 255, 255, 0.6);
       pointer-events: none;
       z-index: 2;
+      transition: opacity 0.15s ease;
     }
 
     /* #13: 2pt blue on the glyph, 2pt red outside (4pt red layer under 2pt blue + fill) */
