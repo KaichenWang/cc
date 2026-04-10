@@ -157,9 +157,6 @@
   <script>
     (function () {
       var grid = document.getElementById("grid");
-      // While building the set: every cell uses this file. Set to false when
-      // gifs/01.gif … gifs/50.gif are all present and each square should load its own file.
-      var USE_SINGLE_PLACEHOLDER_GIF = true;
       var PLACEHOLDER_SRC = "gifs/01.gif";
 
       for (var i = 1; i <= 50; i++) {
@@ -169,9 +166,11 @@
         img.alt = "Slot " + i;
         img.loading = "lazy";
         img.decoding = "async";
-        img.src = USE_SINGLE_PLACEHOLDER_GIF
-          ? PLACEHOLDER_SRC
-          : "gifs/" + String(i).padStart(2, "0") + ".gif";
+        img.src = "gifs/" + String(i).padStart(2, "0") + ".gif";
+        img.onerror = function () {
+          this.onerror = null;
+          this.src = PLACEHOLDER_SRC;
+        };
         cell.appendChild(img);
 
         var num = document.createElement("span");
