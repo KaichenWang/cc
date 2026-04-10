@@ -166,20 +166,49 @@
   <script>
     (function () {
       var grid = document.getElementById("grid");
-      var PLACEHOLDER_SRC = "assets/media/gifs/01.gif";
+      function attachGifSrc(img, url) {
+        if ("IntersectionObserver" in window) {
+          img.setAttribute("data-src", url);
+          return;
+        }
+        img.src = url;
+      }
+      var io =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              function (entries) {
+                for (var j = 0; j < entries.length; j++) {
+                  var entry = entries[j];
+                  if (!entry.isIntersecting) continue;
+                  var el = entry.target;
+                  var pending = el.getAttribute("data-src");
+                  if (pending) {
+                    el.src = pending;
+                    el.removeAttribute("data-src");
+                  }
+                  io.unobserve(el);
+                }
+              },
+              { root: null, rootMargin: "200px 0px", threshold: 0 }
+            )
+          : null;
 
       for (var i = 1; i <= 50; i++) {
         var cell = document.createElement("div");
         cell.className = "cell";
         var img = document.createElement("img");
-        img.alt = "Slot " + i;
+        img.alt = "Goal " + i;
         img.loading = "lazy";
         img.decoding = "async";
-        img.src = "assets/media/gifs/" + String(i).padStart(2, "0") + ".gif";
+        attachGifSrc(
+          img,
+          "assets/media/gifs/" + String(i).padStart(2, "0") + ".gif"
+        );
         img.onerror = function () {
           this.onerror = null;
-          this.src = PLACEHOLDER_SRC;
+          this.removeAttribute("src");
         };
+        if (io) io.observe(img);
         cell.appendChild(img);
 
         var num = document.createElement("span");
