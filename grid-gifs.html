@@ -31,8 +31,8 @@
     .grid {
       display: grid;
       width: 100%;
-      gap: clamp(4px, 1vw, 12px);
-      padding: clamp(4px, 1vw, 12px);
+      gap: clamp(4px, 1vw, 4px);
+      padding: clamp(4px, 1vw, 4px);
       grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
@@ -66,7 +66,6 @@
       aspect-ratio: 1 / 1;
       min-width: 0;
       overflow: hidden;
-      border-radius: 4px;
       background: #222;
     }
 
@@ -97,8 +96,9 @@
 
     /* #13: 2pt blue on the glyph, 2pt red outside (4pt red layer under 2pt blue + fill) */
     .cell-number--13 {
+      text-align: center;
       text-shadow: none;
-      letter-spacing: 40px;
+      letter-spacing: 12px;
       font-family: "NHL Montreal", system-ui, sans-serif;
       font-style: normal;
     }
@@ -115,7 +115,7 @@
       pointer-events: none;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 40px #AF1E2D;
+      -webkit-text-stroke: 12px #AF1E2D;
       z-index: 0;
     }
 
@@ -124,7 +124,7 @@
       z-index: 1;
       color: transparent;
       -webkit-text-fill-color: #fff;
-      -webkit-text-stroke: 20px #192168;
+      -webkit-text-stroke: 6px #192168;
       paint-order: stroke fill;
     }
 
