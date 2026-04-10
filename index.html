@@ -213,9 +213,17 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: 50% 50%;
       display: block;
       position: relative;
       z-index: 0;
+    }
+
+    /* Cells 33+ (GIFs slightly oversized; crop bottom + left) */
+    .grid > .cell:nth-child(n + 33) img {
+      transform: scale(1.03);
+      transform-origin: 100% 0%;
+      object-position: 100% 0%;
     }
 
     .credit-info-btn {
