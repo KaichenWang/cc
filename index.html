@@ -216,10 +216,118 @@
       position: relative;
       z-index: 0;
     }
+
+    .credit-info-btn {
+      position: absolute;
+      right: clamp(4px, 1.2cqw, 10px);
+      bottom: clamp(4px, 1.2cqw, 10px);
+      z-index: 5;
+      width: clamp(22px, 6cqw, 28px);
+      height: clamp(22px, 6cqw, 28px);
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      color: rgba(255, 255, 255, 0.9);
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(12px, 3.2cqw, 15px);
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .credit-info-btn:hover,
+    .credit-info-btn:focus-visible {
+      background: rgba(0, 0, 0, 0.75);
+      border-color: rgba(255, 255, 255, 0.65);
+      outline: none;
+    }
+
+    .credit-banner {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 8px 14px;
+      background: rgba(17, 17, 17, 0.92);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: clamp(11px, 2.8vw, 13px);
+      line-height: 1.35;
+      color: rgba(255, 255, 255, 0.82);
+      transform: translateY(100%);
+      visibility: hidden;
+      transition: transform 0.22s ease, visibility 0.22s ease;
+    }
+
+    .credit-banner.is-open {
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    .credit-banner p {
+      margin: 0;
+      text-align: center;
+      max-width: 52rem;
+      font-family: "Instrument Serif", serif;
+    }
+
+    .credit-banner a,
+    .credit-banner a:visited,
+    .credit-banner a:hover,
+    .credit-banner a:active {
+      color: inherit;
+    }
+
+    .credit-banner-close {
+      flex-shrink: 0;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.65);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.95em;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .credit-banner-close:hover,
+    .credit-banner-close:focus-visible {
+      color: #fff;
+      outline: none;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <main class="grid" id="grid" aria-label="GIF grid"></main>
+  <div
+    id="credit-banner"
+    class="credit-banner"
+    role="region"
+    aria-label="Credits"
+    aria-hidden="true"
+    hidden
+  >
+    <p>
+      Unofficial fan site. All footage belongs to the NHL, broadcasters, and original creators. No infringement intended.</p>
+    </p>
+    <p>Special thanks to <a href="https://www.youtube.com/@HunterMagunter" target="_blank" rel="noopener noreferrer">YouTube @HunterMagunter</a>.</p>
+    <button type="button" class="credit-banner-close" id="credit-banner-close">
+      Close
+    </button>
+  </div>
   <script>
     (function () {
       var grid = document.getElementById("grid");
@@ -285,6 +393,64 @@
           num.textContent = String(i);
         }
         cell.appendChild(num);
+
+        if (i === 50) {
+          var creditBtn = document.createElement("button");
+          creditBtn.type = "button";
+          creditBtn.className = "credit-info-btn";
+          creditBtn.setAttribute("aria-label", "Show credits");
+          creditBtn.setAttribute("aria-expanded", "false");
+          creditBtn.setAttribute("aria-controls", "credit-banner");
+          creditBtn.textContent = "i";
+
+          var banner = document.getElementById("credit-banner");
+          var closeBtn = document.getElementById("credit-banner-close");
+          var hideBannerTimer = null;
+
+          function setBannerOpen(open) {
+            if (open) {
+              if (hideBannerTimer) {
+                window.clearTimeout(hideBannerTimer);
+                hideBannerTimer = null;
+              }
+              banner.hidden = false;
+              banner.setAttribute("aria-hidden", "false");
+              creditBtn.setAttribute("aria-expanded", "true");
+              creditBtn.setAttribute("aria-label", "Hide credits");
+              window.requestAnimationFrame(function () {
+                window.requestAnimationFrame(function () {
+                  banner.classList.add("is-open");
+                });
+              });
+            } else {
+              banner.classList.remove("is-open");
+              banner.setAttribute("aria-hidden", "true");
+              creditBtn.setAttribute("aria-expanded", "false");
+              creditBtn.setAttribute("aria-label", "Show credits");
+              hideBannerTimer = window.setTimeout(function () {
+                hideBannerTimer = null;
+                if (!banner.classList.contains("is-open")) {
+                  banner.hidden = true;
+                }
+              }, 220);
+            }
+          }
+
+          creditBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            setBannerOpen(!banner.classList.contains("is-open"));
+          });
+          closeBtn.addEventListener("click", function () {
+            setBannerOpen(false);
+          });
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && banner.classList.contains("is-open")) {
+              setBannerOpen(false);
+            }
+          });
+
+          cell.appendChild(creditBtn);
+        }
 
         grid.appendChild(cell);
       }
