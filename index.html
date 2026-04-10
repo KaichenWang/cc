@@ -416,18 +416,20 @@
           cell.classList.add("cell--50");
         }
         var img = document.createElement("img");
+        var gifUrl = "assets/media/gifs/" + String(i).padStart(2, "0") + ".gif";
         img.alt = "Goal " + i;
-        img.loading = "lazy";
+        img.loading = i === 50 ? "eager" : "lazy";
         img.decoding = "async";
-        attachGifSrc(
-          img,
-          "assets/media/gifs/" + String(i).padStart(2, "0") + ".gif"
-        );
+        if (i === 50) {
+          img.src = gifUrl;
+        } else {
+          attachGifSrc(img, gifUrl);
+        }
         img.onerror = function () {
           this.onerror = null;
           this.removeAttribute("src");
         };
-        if (io) io.observe(img);
+        if (i !== 50 && io) io.observe(img);
         cell.appendChild(img);
 
         var num = document.createElement("span");
