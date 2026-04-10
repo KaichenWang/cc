@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>50 GIF grid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    @font-face {
+      font-family: "NHL Montreal";
+      src: url("nhl-montreal.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #111;
+    }
+
+    .grid {
+      display: grid;
+      width: 100%;
+      gap: clamp(4px, 1vw, 12px);
+      padding: clamp(4px, 1vw, 12px);
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    @media (min-width: 480px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 720px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 960px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    .cell {
+      container-type: size;
+      position: relative;
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #222;
+    }
+
+    .cell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .cell-number {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: calc(100cqw / 3);
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* #13: 2pt blue on the glyph, 2pt red outside (4pt red layer under 2pt blue + fill) */
+    .cell-number--13 {
+      text-shadow: none;
+      letter-spacing: 40px;
+      font-family: "NHL Montreal", system-ui, sans-serif;
+      font-style: normal;
+    }
+
+    .cell-number--13-back {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      pointer-events: none;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 40px #AF1E2D;
+      z-index: 0;
+    }
+
+    .cell-number--13-front {
+      position: relative;
+      z-index: 1;
+      color: transparent;
+      -webkit-text-fill-color: #fff;
+      -webkit-text-stroke: 20px #192168;
+      paint-order: stroke fill;
+    }
+
+    .cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      position: relative;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="grid" id="grid" aria-label="GIF grid"></main>
+  <script>
+    (function () {
+      var grid = document.getElementById("grid");
+      // While building the set: every cell uses this file. Set to false when
+      // gifs/01.gif … gifs/50.gif are all present and each square should load its own file.
+      var USE_SINGLE_PLACEHOLDER_GIF = true;
+      var PLACEHOLDER_SRC = "gifs/01.gif";
+
+      for (var i = 1; i <= 50; i++) {
+        var cell = document.createElement("div");
+        cell.className = "cell";
+        var img = document.createElement("img");
+        img.alt = "Slot " + i;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.src = USE_SINGLE_PLACEHOLDER_GIF
+          ? PLACEHOLDER_SRC
+          : "gifs/" + String(i).padStart(2, "0") + ".gif";
+        cell.appendChild(img);
+
+        var num = document.createElement("span");
+        if (i === 13) {
+          num.className = "cell-number cell-number--13";
+          var back = document.createElement("span");
+          back.className = "cell-number--13-back";
+          back.setAttribute("aria-hidden", "true");
+          back.textContent = "13";
+          var front = document.createElement("span");
+          front.className = "cell-number--13-front";
+          front.textContent = "13";
+          num.appendChild(back);
+          num.appendChild(front);
+        } else {
+          num.className = "cell-number";
+          num.textContent = String(i);
+        }
+        cell.appendChild(num);
+
+        grid.appendChild(cell);
+      }
+    })();
+  </script>
+</body>
+</html>
